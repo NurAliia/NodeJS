@@ -1,0 +1,9 @@
+{
+    "scripts": {
+        "task1": "node ./task_1/task_1_1.js",
+        "task1_2": "node ./task_1/task_1_2.js"
+    },
+    "devDependencies": {
+        "csvtojson": "^2.0.10"
+    }
+}

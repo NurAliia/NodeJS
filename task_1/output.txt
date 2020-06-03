@@ -1,0 +1,2 @@
+{"word":"dog","frequency":"4"}
+{"word":"cat","frequency":"5"}
