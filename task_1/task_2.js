@@ -2,11 +2,13 @@ const csvFilePath="./task_1/example.csv";
 const csvtojsonV2=require("csvtojson/v2");
 const fs=require("fs");
 
-csvtojsonV2()
+function convertCsvToJson(){
+  csvtojsonV2()
   .fromFile(csvFilePath)
   .then((jsonObj)=>{
     writeToFile(jsonObj);
   })
+}
 
 function writeToFile(jsonObj){
   let text='';
@@ -18,3 +20,5 @@ function writeToFile(jsonObj){
     console.log("File has been created");
   })      
 }
+
+exports.convertCsvToJson=convertCsvToJson();
