@@ -1,20 +1,33 @@
 const Joi = require('joi');
 
-const userSchema = Joi
+interface IUser {
+  _id?: string,
+  id: string,
+  login: string,
+  password: string,
+  age: number,
+  isDeleted: boolean
+}
+
+type UserKeys<T> = {
+  [key in keyof T]: any;
+}
+
+const userSchema: UserKeys<IUser> = Joi
   .object()
   .keys({
     id: Joi.string().required(),
-    login: Joi.string().required().regex(/^[0-9]*[a-z]*$/),
-    password: Joi.string().required(),
-    age: Joi.number().integer().min(0).max(99).required(),
+    login: Joi.string().required(),
+    password: Joi.string().required().regex(/^(\d+[a-zA-Z]|[a-zA-Z]+\d)(\d|[a-zA-Z])*/),
+    age: Joi.number().integer().min(4).max(130).required(),
     isDeleted: Joi.boolean()
   })
 
-const validateRemotely = (obj) => {
+const validateRemotely = (obj: any) => {
   return Joi.validate(obj, userSchema);
 }
 
-module.exports={
+export {
   userSchema,
   validateRemotely
 }

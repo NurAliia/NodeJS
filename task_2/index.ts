@@ -4,25 +4,25 @@ const bodyParser = require('body-parser');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
 const _ = require('lodash');
-const { userSchema, validateRemotely } = require('./user.ts');
+const { userSchema, validateRemotely }=require('./user.ts');
 
 app.listen(3000);
 app.use(bodyParser.json());
 app.use('/', router);
 
-data=[];
+let data: any[] = [];
 
-router.get('/', function(req, res){
+router.get('/', function(req: any, res: any){
   res.json(data);
 })
 
-router.get('/autoSuggestUsers', function(req, res){
+router.get('/autoSuggestUsers', function(req: any, res: any){
   res.json(
     getAutoSuggestUsers(req.query.loginSubstring, req.query.limit)
   );
 })
 
-router.get('/user/:id', function(req, res) {
+router.get('/user/:id', function(req: any, res: any) {
   let user = _.find(data, { id: req.params.id });
   if (user === undefined) {
     res.status(404)
@@ -32,14 +32,14 @@ router.get('/user/:id', function(req, res) {
   }
 })
 
-router.post('/add', validateSchema(userSchema), (req, res) => {
+router.post('/add', validateSchema(userSchema), (req: any, res: any) => {
   const user = req.body;
   user._id = uuidv4();
   data.push(user);
   res.status(204).json(user);
 })
 
-router.put('/user/:id', validateSchema(userSchema), (req, res) => {
+router.put('/user/:id', validateSchema(userSchema), (req: any, res: any) => {
   let index = _.findIndex(data, { id: req.params.id.toString() });
   if (index === undefined) {
     res.status(404)
@@ -50,7 +50,7 @@ router.put('/user/:id', validateSchema(userSchema), (req, res) => {
   }
 })
 
-router.delete('/user/:id', (req, res) => {
+router.delete('/user/:id', (req: any, res: any) => {
   let index = _.findIndex(data, { id: req.params.id.toString() });
   if (index === undefined) {
     res.status(404)
@@ -61,17 +61,17 @@ router.delete('/user/:id', (req, res) => {
   }
 })
 
-function getAutoSuggestUsers(loginSubstring, limit){
+function getAutoSuggestUsers(loginSubstring: any, limit: any){
   let datalimit = _.slice(data, 0, limit);
-  users = _.filter(datalimit,  item => {
+  let users = _.filter(datalimit,  (item: any) => {
     return item.login.indexOf(loginSubstring.toString()) > 0;
   });
   users = _.orderBy(users, ['login']); // Use Lodash to sort array by 'login'
   return users;
 }
 
-function errorResponse (schemaErrors) {
-  const errors = schemaErrors.map(error => {
+function errorResponse (schemaErrors: any) {
+  const errors = schemaErrors.map((error: any) => {
     let { path, message } = error;
     return { path, message };
   });
@@ -81,8 +81,8 @@ function errorResponse (schemaErrors) {
   }
 }
 
-function validateSchema (schema) {
-  return (req, res, next) => {
+function validateSchema (schema: any) {
+  return (req: any, res: any, next: any) => {
     const { error } = validateRemotely(req.body)
     if (error) {
       res.status(400).json(errorResponse(error.details));
