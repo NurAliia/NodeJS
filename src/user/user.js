@@ -28,6 +28,5 @@ const validateRemotely = (obj) => {
 }
 
 module.exports = {
-    userSchema,
     validateRemotely
 }

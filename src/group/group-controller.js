@@ -2,14 +2,13 @@ const express = require('express');
 const cors = require('cors')
 const router = express.Router();
 const bodyParser = require('body-parser');
-const { validateRemotely } = require('./user.js');
-const User = require('../db.js');
+const { validateRemotely } = require('./group.js');
+const { Group } = require('../db.js');
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 router.use(cors());
 
-router.get('/users', async function (req, res) {
-  console.log("Users");
+router.get('/', async function (req, res) {
   res.set({
     "Access-Control-Allow-Origin" : "*",
     "Access-Control-Allow-Credentials" : true,
@@ -17,73 +16,66 @@ router.get('/users', async function (req, res) {
     'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token'
   });
   try {
-    const users = await User.findAll({
-      attributes: [ 'id', 'login', 'password', 'age', 'isDeleted' ]
+    const groups = await Group.findAll({
+      attributes: [ 'id', 'name', 'permission' ]
     });
-    res.status(200).send(users);
+    res.status(200).send(groups);
   } catch (e) {
     if (e) return res.status(500).send(`There was a problem finding the users. Message ${e}`);
   }
 });
 
 router.post('/add', validateSchema(), async function (req, res) {
-  const userData = {
+  const groupData = {
     id: req.body.id,
-    login: req.body.login,
-    password: req.body.password,
-    age: req.body.age,
-    isDeleted: req.body.isDeleted,
+    name: req.body.name,
+    permission: req.body.permission,
   };
   try {
-    const user = await User.create(userData);
-    res.status(200).send(user);
+    const group = await Group.create(groupData);
+    res.status(200).send(group);
   } catch (e) {
     if (e) return res.status(500).send(`There was a problem adding the information to the database. Message ${e}`);
   }
 });
 
-router.get('/users/:id', async function (req, res) {
+router.get('/:id', async function (req, res) {
   res.set({
-      "Access-Control-Allow-Origin" : "*",
-      "Access-Control-Allow-Credentials" : true,
-      'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTION',
-      'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token'
+    "Access-Control-Allow-Origin" : "*",
+    "Access-Control-Allow-Credentials" : true,
+    'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTION',
+    'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token'
   });
   const id = req.params.id;
   try {
-    const user = await User.findOne({
-      attributes: [ 'id', 'login', 'password', 'age', 'isDeleted' ],
-      where: {
-        id
-      }
-    });
-    res.status(200).send(user);
+    const group = await Group.findByPk(id);
+    res.status(200).send(group);
   } catch (e) {
     if (e) return res.status(500).send(`There was a problem finding the users. Message ${e}`);
   }
 });
 
-router.put("/users/:id", validateSchema(), async function (req, res) {
+router.put("/:id", validateSchema(), async function (req, res) {
   try {
-    const user = await User.update(req.body, {
+    await Group.update(req.body, {
       where: {
         id: req.params.id
       }
     });
-    res.status(200).send(`Successfully updated user with id = ${req.params.id}`);
+    res.status(200).send(`Successfully updated group with id = ${req.params.id}`);
   } catch (e) {
     if (e) return res.status(500).send(`There was a problem finding the users. Message ${e}`);
   }
 });
 
-router.delete("/users/:id", async function (req, res) {
+router.delete("/:id", async function (req, res) {
   try {
-    const user = await User.destroy({
+    await Group.destroy({
       where: {
         id: req.params.id
       }
     });
-    res.status(200).send(`Successfully deleted user with id = ${req.params.id}`);
+    res.status(200).send(`Successfully deleted group with id = ${req.params.id}`);
   } catch (e) {
     if (e) return res.status(500).send(`There was a problem finding the users. Message ${e}`);
   }

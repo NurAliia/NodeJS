@@ -5,8 +5,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const UserController = require('./user/userController');
-app.use('/', UserController);
+const UserController = require('./user/user-controller');
+app.use('/users', UserController);
+
+const GroupController = require('./group/group-controller');
+app.use('/groups', GroupController);
 
 app.get('/createdb', (req, res) => {
   let sql = 'CREATE DATABASE nodemysql';
