@@ -58,7 +58,7 @@ router.get('/:id', async function (req, res) {
     });
     res.status(200).send(user);
   } catch (e) {
-    if (e) return res.status(500).send(`There was a problem finding the users. Message ${e}`);
+    if (e) return res.status(500).send(`There was a problem finding the user. Message ${e}`);
   }
 });
 
@@ -71,7 +71,7 @@ router.put("/:id", validateSchema(), async function (req, res) {
     });
     res.status(200).send(`Successfully updated user with id = ${req.params.id}`);
   } catch (e) {
-    if (e) return res.status(500).send(`There was a problem finding the users. Message ${e}`);
+    if (e) return res.status(500).send(`There was a problem update the user. Message ${e}`);
   }
 });
 
@@ -84,7 +84,7 @@ router.delete("/:id", async function (req, res) {
     });
     res.status(200).send(`Successfully deleted user with id = ${req.params.id}`);
   } catch (e) {
-    if (e) return res.status(500).send(`There was a problem finding the users. Message ${e}`);
+    if (e) return res.status(500).send(`There was a problem delete the user. Message ${e}`);
   }
 });
 

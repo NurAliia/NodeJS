@@ -11,6 +11,9 @@ app.use('/users', UserController);
 const GroupController = require('./group/group-controller');
 app.use('/groups', GroupController);
 
+const UsersGroupController = require('./users-group/users-group-controller');
+app.use('/usersgroup', UsersGroupController);
+
 app.get('/createdb', (req, res) => {
   let sql = 'CREATE DATABASE nodemysql';
   db.query(sql, (err, result) => {
