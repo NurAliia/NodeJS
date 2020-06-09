@@ -27,16 +27,15 @@ router.get('/users', async function (req, res) {
 });
 
 router.post('/add', validateSchema(), async function (req, res) {
-  // const userData = {
-  //   id: req.body.id,
-  //   login: req.body.login,
-  //   password: req.body.password,
-  //   age: req.body.age,
-  //   isDeleted: req.body.isDeleted,
-  // };
+  const userData = {
+    id: req.body.id,
+    login: req.body.login,
+    password: req.body.password,
+    age: req.body.age,
+    isDeleted: req.body.isDeleted,
+  };
   try {
-    const user = await User.create(req.body);
-    console.log(user);
+    const user = await User.create(userData);
     res.status(200).send(user);
   } catch (e) {
     if (e) return res.status(500).send(`There was a problem adding the information to the database. Message ${e}`);
@@ -71,22 +70,20 @@ router.put("/users/:id", validateSchema(), async function (req, res) {
         id: req.params.id
       }
     });
-    console.log("update");
-    console.log(user);
-    res.status(200).send(user);
+    res.status(200).send(`Successfully updated user with id = ${req.params.id}`);
   } catch (e) {
     if (e) return res.status(500).send(`There was a problem finding the users. Message ${e}`);
   }
 });
 
-router.delete("/user/:id", async function (req, res) {
+router.delete("/users/:id", async function (req, res) {
   try {
-    await User.destroy({
+    const user = await User.destroy({
       where: {
         id: req.params.id
       }
     });
-    res.status(200).send(users);
+    res.status(200).send(`Successfully deleted user with id = ${req.params.id}`);
   } catch (e) {
     if (e) return res.status(500).send(`There was a problem finding the users. Message ${e}`);
   }
