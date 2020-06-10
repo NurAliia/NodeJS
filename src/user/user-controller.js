@@ -21,7 +21,7 @@ router.get('/', async function (req, res) {
     });
     res.status(200).send(users);
   } catch (e) {
-    if (e) return res.status(500).send(`There was a problem finding the users. Message ${e}`);
+    if (e) return res.status(500).send(`Method name: GET, Args: Nothing. There was a problem finding the users. Message ${e}`);
   }
 });
 
@@ -37,7 +37,7 @@ router.post('/add', validateSchema(), async function (req, res) {
     const user = await User.create(userData);
     res.status(200).send(user);
   } catch (e) {
-    if (e) return res.status(500).send(`There was a problem adding the information to the database. Message ${e}`);
+    if (e) return res.status(500).send(`Method name: POST, Args: UserData. There was a problem adding the information to the database. Message ${e}`);
   }
 });
 
@@ -58,7 +58,7 @@ router.get('/:id', async function (req, res) {
     });
     res.status(200).send(user);
   } catch (e) {
-    if (e) return res.status(500).send(`There was a problem finding the user. Message ${e}`);
+    if (e) return res.status(500).send(`Method name: GET, Args: UserId. There was a problem finding the user. Message ${e}`);
   }
 });
 
@@ -71,20 +71,20 @@ router.put("/:id", validateSchema(), async function (req, res) {
     });
     res.status(200).send(`Successfully updated user with id = ${req.params.id}`);
   } catch (e) {
-    if (e) return res.status(500).send(`There was a problem update the user. Message ${e}`);
+    if (e) return res.status(500).send(`Method name: Put, Args: UserId. There was a problem update the user. Message ${e}`);
   }
 });
 
 router.delete("/:id", async function (req, res) {
   try {
-    const user = await User.destroy({
+    await User.destroy({
       where: {
         id: req.params.id
       }
     });
     res.status(200).send(`Successfully deleted user with id = ${req.params.id}`);
   } catch (e) {
-    if (e) return res.status(500).send(`There was a problem delete the user. Message ${e}`);
+    if (e) return res.status(500).send(`Method name: DELETE, Args: UserId. There was a problem delete the user. Message ${e}`);
   }
 });
 

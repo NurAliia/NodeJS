@@ -21,7 +21,7 @@ router.get('/', async function (req, res) {
     });
     res.status(200).send(groups);
   } catch (e) {
-    if (e) return res.status(500).send(`There was a problem finding the groups. Message ${e}`);
+    if (e) return res.status(500).send(`Method name: GET, Args: Nothing. There was a problem finding the groups. Message ${e}`);
   }
 });
 
@@ -35,7 +35,7 @@ router.post('/add', validateSchema(), async function (req, res) {
     const group = await Group.create(groupData);
     res.status(200).send(group);
   } catch (e) {
-    if (e) return res.status(500).send(`There was a problem adding the information to the database. Message ${e}`);
+    if (e) return res.status(500).send(`Method name: GET, Args: GroupData. There was a problem adding the information to the database. Message ${e}`);
   }
 });
 
@@ -51,7 +51,7 @@ router.get('/:id', async function (req, res) {
     const group = await Group.findByPk(id);
     res.status(200).send(group);
   } catch (e) {
-    if (e) return res.status(500).send(`There was a problem finding the group. Message ${e}`);
+    if (e) return res.status(500).send(`Method name: GET, Args: GroupId. There was a problem finding the group. Message ${e}`);
   }
 });
 
@@ -64,7 +64,7 @@ router.put("/:id", validateSchema(), async function (req, res) {
     });
     res.status(200).send(`Successfully updated group with id = ${req.params.id}`);
   } catch (e) {
-    if (e) return res.status(500).send(`There was a problem update the group. Message ${e}`);
+    if (e) return res.status(500).send(`Method name: PUT, Args: GroupId. There was a problem update the group. Message ${e}`);
   }
 });
 
@@ -77,7 +77,7 @@ router.delete("/:id", async function (req, res) {
     });
     res.status(200).send(`Successfully deleted group with id = ${req.params.id}`);
   } catch (e) {
-    if (e) return res.status(500).send(`There was a problem delete group. Message ${e}`);
+    if (e) return res.status(500).send(`Method name: DELETE, Args: UserId. There was a problem delete group. Message ${e}`);
   }
 });
 

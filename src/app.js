@@ -9,8 +9,37 @@ const accessLogStream = fs.createWriteStream(
   path.join(__dirname, 'access.log'), {flags: 'a'}
 );
 
+process.on('uncaughtException', function (err) {
+  console.log('Uncaught Exception', err);
+})
+
+process.on('unhandledRejection', (reason, p) => {
+  console.log('Unhandled Rejection at:', p, 'reason:', reason);
+});
+
 // setup the logger
 app.use(morgan('combined', {stream: accessLogStream}));
+app.use(logErrors);
+app.use(clientErrorHandler);
+app.use(errorHandler);
+
+function logErrors(err, req, res, next) {
+  console.error(err.stack);
+  next(err);
+}
+
+function clientErrorHandler(err, req, res, next) {
+  if (req.xhr) {
+    res.status(500).send({ error: 'Something failed!' });
+  } else {
+    next(err);
+  }
+}
+
+function errorHandler(err, req, res, next) {
+  res.status(500);
+  res.render('error', { error: err });
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
