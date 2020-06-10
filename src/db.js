@@ -53,13 +53,6 @@ const Group = sequelize.define('Group', {
 });
 
 const UserGroup = sequelize.define('UserGroup', {
-    // Model attributes are defined here
-    // id: {
-    //     type: Sequelize.STRING,
-    //     primaryKey: true,
-    //     autoIncrement: true,
-    //     allowNull: false
-    // },
 }, {
     timestamps: false
 });
