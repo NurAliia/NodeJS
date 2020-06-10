@@ -14,20 +14,24 @@ router.get("/", async function (req, res) {
     "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTION",
     "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
   });
-  debugger;
   let answer = "";
-  User.findAll({
-    attributes: ["login"], // включаем столбец name из таблицы users
-    include: [{
-      model: Group,
-      attributes: ["name"]  // включаем столбец name из таблицы groups
-    }]
-  }).then(users => {
-    for(user of users){
-      answer += `${user.dataValues.login} - ${user.dataValues.Groups && user.dataValues.Groups.name || 'NO'}\n`;
+  try {
+    const users = await User.findAll({
+      attributes: ["login"], // включаем столбец name из таблицы users
+      include: [{
+        model: Group,
+        attributes: ["name"]  // включаем столбец name из таблицы groups
+      }]
+    });
+    for(user of users) {
+      for (group of user.dataValues.Groups) {
+        answer += `${user.dataValues.login} - ${group.dataValues.name || 'NO'}\n`;
+      }
     }
     res.status(200).send(answer);
-  });
+  } catch (e) {
+    if (e) return res.status(500).send(`There was a problem finding the users and groups. Message ${e}`);
+  }
 });
 
 router.get("/getGroups/:id", async function (req, res) {
@@ -70,42 +74,66 @@ router.get("/getUsers/:id", async function (req, res) {
   }
 });
 
-
 router.post("/add", async function (req, res) {
   const userId = req.headers.userid;
   const groupId = req.headers.groupid;
-  User.findOne({where: {id: userId}})
-    .then(user=>{
-      if(!user) return;
-
-      // добавим Тому курс по JavaScript
-      Group.findOne({where: {id: groupId}})
-        .then(group=>{
-          if(!group) return;
-          user.addGroup(group);
-        });
-    });
-  // try {
-  //   const user = await User.create({ userId });
-  //   const group = await Group.create({ groupId });
-  //   user.setGroup(group);
-  //   res.status(200).send("Successful");
-  // } catch (e) {
-  //   if (e) return res.status(500).send(`There was a problem finding the users-group. Message ${e}`);
-  // }
+  try {
+    const user = await User.findByPk(userId);
+    if(!user) throw new Error("User not found");
+    const group = await Group.findByPk(groupId);
+    if(!group) throw new Error("Group not found");
+    user.addGroup(group);
+    res.status(200).send(`Successful added userId = ${userId} and groupId = ${groupId}`);
+  } catch (e) {
+    if (e) return res.status(500).send(`There was a problem finding the users-group. Message ${e}`);
+  }
 });
 
-router.delete("/delete", async function (req, res) {
-  const userId = req.headers.userId;
-  User.findOne({where: {id: userId}})
-    .then(user=>{
-      if(!user) return;
-      user.getGroups().then(group => {
-        for(group of groups){
-          if(group.name==="JavaScript") group.usergroup.destroy();
+router.delete("/deleteGroup", async function (req, res) {
+  const userId = req.headers.userid;
+  const groupName = req.headers.groupname;
+  const user = await User.findByPk(userId);
+  try {
+    if(!user) throw new Error("User not found");
+    const groups = await user.getGroups();
+    for(group of groups) {
+      if (groupName) {
+        if (group.dataValues.name === groupName) {
+          group.dataValues.UserGroup.destroy();
+          res.status(200).send(`Successful deleted userId = ${userId} and groupName = ${groupName}`);
         }
-      });
-    });
+      } else {
+        group.dataValues.UserGroup.destroy();
+      }
+    }
+    res.status(200).send(`Successful deleted groups of userId = ${userId}`);
+  } catch (e) {
+    if (e) return res.status(500).send(`There was a problem delete group. Message ${e}`);
+  }
+
+});
+
+router.delete("/deleteUser", async function (req, res) {
+  const groupId = req.headers.groupid;
+  const userLogin = req.headers.userlogin;
+  const group = await Group.findByPk(groupId);
+  try {
+    if(!group) throw new Error("Group not found");
+    const users = await group.getUsers();
+    for(user of users) {
+      if (userlogin) {
+        if (user.dataValues.login === userlogin) {
+          user.dataValues.UserGroup.destroy();
+          res.status(200).send(`Successful deleted groupId = ${groupId} and userLogin = ${userLogin}`);
+        }
+      } else {
+        user.dataValues.UserGroup.destroy();
+      }
+    }
+    res.status(200).send(`Successful deleted users of groupId = ${groupId}`);
+  } catch (e) {
+    if (e) return res.status(500).send(`There was a problem finding delete user. Message ${e}`);
+  }
 });
 
 
