@@ -1,9 +1,10 @@
 const express = require('express');
-const db = require('./db');
-const app = express();
 const path = require('path');
 const fs = require('fs');
 const morgan = require('morgan');
+const cors = require('cors');
+const db = require('./db');
+const app = express();
 
 const accessLogStream = fs.createWriteStream(
   path.join(__dirname, 'access.log'), {flags: 'a'}
@@ -17,6 +18,7 @@ process.on('unhandledRejection', (reason, p) => {
   console.log('Unhandled Rejection at:', p, 'reason:', reason);
 });
 
+app.use(cors())
 // setup the logger
 app.use(morgan('combined', {stream: accessLogStream}));
 app.use(logErrors);
