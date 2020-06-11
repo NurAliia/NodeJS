@@ -24,17 +24,6 @@ app.use(morgan('combined', {stream: accessLogStream}));
 app.use(logErrors);
 app.use(clientErrorHandler);
 app.use(errorHandler);
-app.use(function (req, res, next) {
-  const token = req.headers.jwt;
-  if (!token) {
-    res.status(401).send({error: '401 Unauthorized'})
-  }
-  if (token !== '') {
-    res.status(403).send({error: '403 Forbidden'})
-  }
-  console.log('Authorized');
-  next();
-});
 
 function logErrors(err, req, res, next) {
   console.error(err.stack);

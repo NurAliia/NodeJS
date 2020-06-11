@@ -70,11 +70,3 @@ module.exports = {
     Group,
     UserGroup
 };
-
-// {
-//    "id": "1",
-//   "login": "log",
-//   "password": "123erw",
-//   "age": 23,
-//   "isDeleted": false
-// }

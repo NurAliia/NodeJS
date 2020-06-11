@@ -8,7 +8,9 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 router.use(cors());
 
-router.get('/', async function (req, res) {
+const VerifyToken = require('../middleware/verifyToken');
+
+router.get('/', VerifyToken, async function (req, res) {
   res.set({
     "Access-Control-Allow-Origin" : "*",
     "Access-Control-Allow-Credentials" : true,
@@ -25,7 +27,7 @@ router.get('/', async function (req, res) {
   }
 });
 
-router.post('/add', validateSchema(), async function (req, res) {
+router.post('/add', [VerifyToken, validateSchema()], async function (req, res) {
   const groupData = {
     id: req.body.id,
     name: req.body.name,
@@ -39,7 +41,7 @@ router.post('/add', validateSchema(), async function (req, res) {
   }
 });
 
-router.get('/:id', async function (req, res) {
+router.get('/:id', VerifyToken, async function (req, res) {
   res.set({
     "Access-Control-Allow-Origin" : "*",
     "Access-Control-Allow-Credentials" : true,
@@ -49,6 +51,9 @@ router.get('/:id', async function (req, res) {
   const id = req.params.id;
   try {
     const group = await Group.findByPk(id);
+    if (!group){
+      throw new Error('Group not found')
+    }
     res.status(200).send(group);
   } catch (e) {
     if (e) return res.status(500).send(`Method name: GET, Args: GroupId. There was a problem finding the group. Message ${e}`);
@@ -56,19 +61,24 @@ router.get('/:id', async function (req, res) {
 });
 
 router.put("/:id", validateSchema(), async function (req, res) {
+  const id = req.params.id;
   try {
+    const group = await Group.findByPk(id);
+    if (!group){
+      throw new Error('Group not found')
+    }
     await Group.update(req.body, {
       where: {
-        id: req.params.id
+        id
       }
     });
-    res.status(200).send(`Successfully updated group with id = ${req.params.id}`);
+    res.status(200).send(`Successfully updated group with id = ${id}`);
   } catch (e) {
     if (e) return res.status(500).send(`Method name: PUT, Args: GroupId. There was a problem update the group. Message ${e}`);
   }
 });
 
-router.delete("/:id", async function (req, res) {
+router.delete("/:id", VerifyToken, async function (req, res) {
   try {
     await Group.destroy({
       where: {

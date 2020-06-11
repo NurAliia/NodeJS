@@ -7,7 +7,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 router.use(cors());
 
-router.get("/", async function (req, res) {
+router.get("/", VerifyToken, async function (req, res) {
   res.set({
     "Access-Control-Allow-Origin" : "*",
     "Access-Control-Allow-Credentials" : true,
@@ -34,7 +34,7 @@ router.get("/", async function (req, res) {
   }
 });
 
-router.get("/getGroups/:id", async function (req, res) {
+router.get("/getGroups/:id", VerifyToken, async function (req, res) {
   res.set({
     "Access-Control-Allow-Origin" : "*",
     "Access-Control-Allow-Credentials" : true,
@@ -54,7 +54,7 @@ router.get("/getGroups/:id", async function (req, res) {
   }
 });
 
-router.get("/getUsers/:id", async function (req, res) {
+router.get("/getUsers/:id", VerifyToken, async function (req, res) {
   res.set({
     "Access-Control-Allow-Origin" : "*",
     "Access-Control-Allow-Credentials" : true,
@@ -74,7 +74,7 @@ router.get("/getUsers/:id", async function (req, res) {
   }
 });
 
-router.post("/add", async function (req, res) {
+router.post("/add", VerifyToken, async function (req, res) {
   const userId = req.headers.userid;
   const groupId = req.headers.groupid;
   try {
@@ -89,7 +89,7 @@ router.post("/add", async function (req, res) {
   }
 });
 
-router.delete("/deleteGroup", async function (req, res) {
+router.delete("/deleteGroup", VerifyToken, async function (req, res) {
   const userId = req.headers.userid;
   const groupName = req.headers.groupname;
   const user = await User.findByPk(userId);
@@ -113,7 +113,7 @@ router.delete("/deleteGroup", async function (req, res) {
 
 });
 
-router.delete("/deleteUser", async function (req, res) {
+router.delete("/deleteUser", VerifyToken, async function (req, res) {
   const groupId = req.headers.groupid;
   const userLogin = req.headers.userlogin;
   const group = await Group.findByPk(groupId);

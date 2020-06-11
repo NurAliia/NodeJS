@@ -12,7 +12,7 @@ const groupSchema = Joi
   .keys({
     id: Joi.string().required(),
     name: Joi.string().required(),
-    permission: Joi.string().required(),
+    permission: Joi.string(['READ' | 'WRITE' | 'DELETE' | 'SHARE' | 'UPLOAD_FILES']).required(),
   })
 
 const validateRemotely = (obj) => {
