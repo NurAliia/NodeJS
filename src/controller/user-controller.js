@@ -10,7 +10,7 @@ router.use(cors());
 const VerifyToken = require('../middleware/verify-token');
 const { User } = require('../db.js');
 const config = require('../config');
-const { validateRemotely } = require('./user.js');
+const { validateRemotely } = require('../model/user.js');
 
 router.post('/login', async function(req, res) {
   try {

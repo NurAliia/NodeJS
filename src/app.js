@@ -46,13 +46,13 @@ function errorHandler(err, req, res, next) {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const UserController = require('./user/user-controller');
+const UserController = require('./controller/user-controller');
 app.use('/users', UserController);
 
-const GroupController = require('./group/group-controller');
+const GroupController = require('./controller/group-controller');
 app.use('/groups', GroupController);
 
-const UsersGroupController = require('./users-group/users-group-controller');
+const UsersGroupController = require('./controller/users-group-controller');
 app.use('/usersgroup', UsersGroupController);
 
 app.get('/createdb', (req, res) => {

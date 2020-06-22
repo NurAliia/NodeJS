@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors')
 const router = express.Router();
 const bodyParser = require('body-parser');
-const { validateRemotely } = require('./group.js');
+const { validateRemotely } = require('../model/group.js');
 const { Group } = require('../db.js');
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
