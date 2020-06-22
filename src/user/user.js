@@ -1,18 +1,5 @@
 const Joi = require('joi');
 
-// interface IUser {
-//     id: string,
-//     login: string,
-//     password: string,
-//     age: number,
-//     isDeleted: boolean
-// }
-//
-// type UserKeys<T> = {
-//     [key in keyof T]: any;
-// }
-
-// const userSchema: UserKeys<IUser> = Joi
 const userSchema = Joi
     .object()
     .keys({

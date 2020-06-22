@@ -30,7 +30,7 @@ router.get("/", VerifyToken, async function (req, res) {
     }
     res.status(200).send(answer);
   } catch (e) {
-    if (e) return res.status(500).send(`Method name: GET, Args: Nothing. There was a problem finding the users and groups. Message ${e}`);
+    if (e) return res.status(404).send(`Method name: GET, Args: Nothing. There was a problem finding the users and groups. Message ${e}`);
   }
 });
 
@@ -50,7 +50,7 @@ router.get("/getGroups/:id", VerifyToken, async function (req, res) {
     const groups = user.getGroup();
     res.status(200).send(groups);
   } catch (e) {
-    if (e) return res.status(500).send(`Method name: GET, Args: UserId. There was a problem finding the groups of current user. Message ${e}`);
+    if (e) return res.status(404).send(`Method name: GET, Args: UserId. There was a problem finding the groups of current user. Message ${e}`);
   }
 });
 
@@ -70,7 +70,7 @@ router.get("/getUsers/:id", VerifyToken, async function (req, res) {
     const users = group.getUser();
     res.status(200).send(users);
   } catch (e) {
-    if (e) return res.status(500).send(`Method name: GET, Args: GroupId. There was a problem finding the users of current group. Message ${e}`);
+    if (e) return res.status(404).send(`Method name: GET, Args: GroupId. There was a problem finding the users of current group. Message ${e}`);
   }
 });
 
@@ -85,7 +85,7 @@ router.post("/add", VerifyToken, async function (req, res) {
     user.addGroup(group);
     res.status(200).send(`Successful added userId = ${userId} and groupId = ${groupId}`);
   } catch (e) {
-    if (e) return res.status(500).send(`Method name: POST, Args: UserId, GroupId. There was a problem finding the users-group. Message ${e}`);
+    if (e) return res.status(404).send(`Method name: POST, Args: UserId, GroupId. There was a problem finding the users-group. Message ${e}`);
   }
 });
 
@@ -108,7 +108,7 @@ router.delete("/deleteGroup", VerifyToken, async function (req, res) {
     }
     res.status(200).send(`Successful deleted groups of userId = ${userId}`);
   } catch (e) {
-    if (e) return res.status(500).send(`Method name: Delete, Args: UserId, GroupName. There was a problem delete group. Message ${e}`);
+    if (e) return res.status(400).send(`Method name: Delete, Args: UserId, GroupName. There was a problem delete group. Message ${e}`);
   }
 
 });
@@ -132,7 +132,7 @@ router.delete("/deleteUser", VerifyToken, async function (req, res) {
     }
     res.status(200).send(`Successful deleted users of groupId = ${groupId}`);
   } catch (e) {
-    if (e) return res.status(500).send(`Method name: DELETE, Args: GroupId, UserId. There was a problem finding delete user. Message ${e}`);
+    if (e) return res.status(404).send(`Method name: DELETE, Args: GroupId, UserId. There was a problem finding delete user. Message ${e}`);
   }
 });
 

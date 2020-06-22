@@ -1,10 +1,3 @@
-// type Permission = 'READ' | 'WRITE' | 'DELETE' | 'SHARE' | 'UPLOAD_FILES';
-//
-// type Group = {
-//   id: string;
-//   name: string;
-//   permission: Array<Permission>;
-// };
 const Joi = require('joi');
 
 const groupSchema = Joi

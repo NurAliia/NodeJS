@@ -7,7 +7,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 router.use(cors());
 
-const VerifyToken = require('../middleware/verifyToken');
+const VerifyToken = require('../middleware/verify-token');
 const { User } = require('../db.js');
 const config = require('../config');
 const { validateRemotely } = require('./user.js');
@@ -36,7 +36,7 @@ router.post('/login', async function(req, res) {
     res.cookie('token', token).status(200).send({ auth: true, token: token });
   } catch (e) {
     if (e) {
-      return res.status(500).send(`There was a problem finding the users. Message: ${e}`);
+      return res.status(404).send(`There was a problem finding the users. Message: ${e}`);
     }
   }
 });
@@ -58,7 +58,7 @@ router.get('/', VerifyToken, async function (req, res) {
     });
     res.status(200).send(users);
   } catch (e) {
-    if (e) return res.status(500).send(`Method name: GET, Args: Nothing. There was a problem finding the users. Message ${e}`);
+    if (e) return res.status(404).send(`Method name: GET, Args: Nothing. There was a problem finding the users. Message ${e}`);
   }
 });
 
@@ -74,7 +74,7 @@ router.post('/add', validateSchema(), async function (req, res) {
     const user = await User.create(userData);
     res.status(200).send(user);
   } catch (e) {
-    if (e) return res.status(500).send(`Method name: POST, Args: UserData. There was a problem adding the information to the database. Message ${e}`);
+    if (e) return res.status(400).send(`Method name: POST, Args: UserData. There was a problem adding the information to the database. Message ${e}`);
   }
 });
 
@@ -98,7 +98,7 @@ router.get('/:id', VerifyToken, async function (req, res) {
     }
     res.status(200).send(user);
   } catch (e) {
-    if (e) return res.status(500).send(`Method name: GET, Args: UserId. There was a problem finding the user. Message ${e}`);
+    if (e) return res.status(404).send(`Method name: GET, Args: UserId. There was a problem finding the user. Message ${e}`);
   }
 });
 
@@ -116,7 +116,7 @@ router.put("/:id", validateSchema(), async function (req, res) {
     });
     res.status(200).send(`Successfully updated user with id = ${id}`);
   } catch (e) {
-    if (e) return res.status(500).send(`Method name: Put, Args: UserId. There was a problem update the user. Message ${e}`);
+    if (e) return res.status(400).send(`Method name: Put, Args: UserId. There was a problem update the user. Message ${e}`);
   }
 });
 
@@ -129,7 +129,7 @@ router.delete("/:id", async function (req, res) {
     });
     res.status(200).send(`Successfully deleted user with id = ${req.params.id}`);
   } catch (e) {
-    if (e) return res.status(500).send(`Method name: DELETE, Args: UserId. There was a problem delete the user. Message ${e}`);
+    if (e) return res.status(400).send(`Method name: DELETE, Args: UserId. There was a problem delete the user. Message ${e}`);
   }
 });
 
